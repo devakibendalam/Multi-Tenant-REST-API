@@ -36,15 +36,32 @@ function computeChainHash(
   return crypto.createHash("sha256").update(payload).digest("hex");
 }
 
-async function main(): Promise<void> {
-  console.log("🌱 Starting seed...");
+async function shouldSeed(): Promise<boolean> {
+  // Check if any tenants exist
+  const tenantCount = await prisma.tenant.count();
 
-  // Clean existing data
-  await prisma.emailLog.deleteMany();
-  await prisma.auditLog.deleteMany();
-  await prisma.apiKey.deleteMany();
-  await prisma.user.deleteMany();
-  await prisma.tenant.deleteMany();
+  if (tenantCount > 0) {
+    console.log(
+      `⏭️  Database already has ${tenantCount} tenant(s). Skipping seed.`
+    );
+    return false;
+  }
+
+  return true;
+}
+
+async function main(): Promise<void> {
+  console.log("🔍 Checking if seeding is needed...");
+
+  // Check if we should seed
+  const needsSeed = await shouldSeed();
+
+  if (!needsSeed) {
+    console.log("✅ Database is already populated. Nothing to do.");
+    return;
+  }
+
+  console.log("🌱 Database is empty. Starting seed...");
 
   // Create 2 tenants
   const tenant1 = await prisma.tenant.create({
@@ -278,16 +295,19 @@ async function main(): Promise<void> {
   }
 
   // Print summary
-  console.log("\n📋 SEED SUMMARY");
-  console.log("================");
+  console.log("\n" + "=".repeat(60));
+  console.log("📋 SEED COMPLETED SUCCESSFULLY");
+  console.log("=".repeat(60));
   console.log("\n🔑 API Keys (SAVE THESE - shown only once):");
+  console.log("-".repeat(60));
   for (const key of apiKeysCreated) {
-    console.log(`   ${key.tenantName}: ${key.rawKey}`);
+    console.log(`   ${key.tenantName}:`);
+    console.log(`   ${key.rawKey}`);
+    console.log("");
   }
-  console.log(
-    "\n⚠️  Use these API keys in the X-API-Key header for all requests"
-  );
-  console.log("================\n");
+  console.log("-".repeat(60));
+  console.log("⚠️  Use these API keys in the X-API-Key header for requests");
+  console.log("=".repeat(60) + "\n");
 }
 
 main()

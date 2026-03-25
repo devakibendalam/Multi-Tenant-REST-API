@@ -21,7 +21,14 @@ RUN npx prisma generate
 # In development, this layer is overridden by the volume mount
 COPY . .
 
+# Copy and set permissions for entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 3000
+
+# Use entrypoint script
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # Default command for development (uses nodemon for hot reload)
 CMD ["npm", "run", "dev"]
