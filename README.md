@@ -6,7 +6,7 @@ A production-grade backend API for a B2B SaaS platform with multi-tenant isolati
 
 ## 🛠 Tech Stack
 
-- **Runtime:** Node.js 22 with TypeScript
+- **Runtime:** Node.js 24 with TypeScript
 - **Framework:** Express 5 — chosen for its mature ecosystem, extensive middleware support, and familiarity. Express 5 includes native Promise support for route handlers, removing the need for wrapper utilities. While Fastify offers better raw performance, Express's ecosystem maturity and the project's emphasis on correctness over throughput made it the pragmatic choice.
 - **Database:** PostgreSQL 18 with Prisma ORM — Prisma provides type-safe queries with transparent SQL generation (unlike Sequelize), making tenant isolation verifiable at the query level.
 - **Cache/Queue:** Redis 8 — used for both sliding window rate limiting (sorted sets) and BullMQ job queues.
@@ -178,11 +178,10 @@ CREATE TRIGGER audit_logs_no_delete
 
 ## ⚠️ Known Limitations
 
-- ❗ No Redis Lua (small race condition in multi-instance setups)
-- ❗ Audit triggers must be manually applied
-- ❗ Emails are not реально delivered (Ethereal only)
-- ❗ No JWT/session authentication
-- ❗ Single database (row-level isolation only)
+- ❗ Single-instance rate limiting: The sliding window implementation works correctly but doesn't use Lua scripts for full atomicity — in a multi-instance deployment, there's a small race condition window. Production would need a Redis Lua script.
+- ❗ No real email delivery: Uses Ethereal test SMTP — emails are captured but not actually delivered.
+- ❗ No JWT/session auth: Authentication is purely API-key-based as specified. A production system would typically add JWT for web sessions.
+- ❗ Single database: All tenants share one database with row-level isolation. For very large deployments, database-per-tenant would be more scalable.
 
 ---
 
