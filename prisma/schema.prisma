@@ -1,0 +1,117 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  users     User[]
+  apiKeys   ApiKey[]
+  auditLogs AuditLog[]
+  emailLogs EmailLog[]
+
+  @@map("tenants")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String
+  name      String
+  role      Role     @default(MEMBER)
+  tenantId  String   @map("tenant_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  auditLogs AuditLog[]
+
+  @@unique([email, tenantId])
+  @@index([tenantId])
+  @@map("users")
+}
+
+enum Role {
+  OWNER
+  MEMBER
+}
+
+model ApiKey {
+  id           String    @id @default(uuid())
+  keyHash      String    @map("key_hash")
+  keyPrefix    String    @map("key_prefix")
+  tenantId     String    @map("tenant_id")
+  userId       String    @map("user_id")
+  isActive     Boolean   @default(true) @map("is_active")
+  expiresAt    DateTime? @map("expires_at")
+  rotatedAt    DateTime? @map("rotated_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  tenant       Tenant    @relation(fields: [tenantId], references: [id])
+
+  @@index([keyPrefix])
+  @@index([tenantId])
+  @@map("api_keys")
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  tenantId      String   @map("tenant_id")
+  userId        String?  @map("user_id")
+  action        String
+  resourceType  String   @map("resource_type")
+  resourceId    String?  @map("resource_id")
+  previousValue Json?    @map("previous_value")
+  newValue      Json?    @map("new_value")
+  apiKeyPrefix  String?  @map("api_key_prefix")
+  ipAddress     String?  @map("ip_address")
+  chainHash     String   @map("chain_hash")
+  previousHash  String?  @map("previous_hash")
+  sequence      Int
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  tenant        Tenant   @relation(fields: [tenantId], references: [id])
+  user          User?    @relation(fields: [userId], references: [id])
+
+  @@index([tenantId, sequence])
+  @@index([tenantId, action])
+  @@index([tenantId, resourceType])
+  @@index([tenantId, createdAt])
+  @@index([tenantId, userId])
+  @@map("audit_logs")
+}
+
+model EmailLog {
+  id           String      @id @default(uuid())
+  tenantId     String      @map("tenant_id")
+  recipient    String
+  templateName String      @map("template_name")
+  subject      String
+  status       EmailStatus @default(PENDING)
+  attemptCount Int         @default(0) @map("attempt_count")
+  errorMessage String?     @map("error_message")
+  previewUrl   String?     @map("preview_url")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  tenant       Tenant      @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@map("email_logs")
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  FAILED
+  DEAD_LETTER
+}

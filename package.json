@@ -1,0 +1,43 @@
+{
+  "name": "velozity-multi-tenant-api",
+  "version": "1.0.0",
+  "description": "Multi-Tenant REST API with Rate Limiting, Queue-Based Email Engine & Audit Trail",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "seed": "ts-node prisma/seed.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "test": "jest --runInBand --forceExit --detectOpenHandles",
+    "test:coverage": "jest --runInBand --forceExit --detectOpenHandles --coverage"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.2",
+    "argon2": "^0.44.0",
+    "bullmq": "^5.71.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.10.1",
+    "nodemailer": "^8.0.3",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.5.0",
+    "@types/nodemailer": "^7.0.11",
+    "@types/uuid": "^11.0.0",
+    "jest": "^30.3.0",
+    "nodemon": "^3.1.14",
+    "prisma": "^6.19.2",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

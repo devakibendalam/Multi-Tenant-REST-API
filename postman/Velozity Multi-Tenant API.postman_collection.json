@@ -1,0 +1,596 @@
+{
+  "info": {
+    "_postman_id": "d06596f9-c1ca-4198-a5cb-cd5a9e1ea1b6",
+    "name": "Velozity Multi-Tenant API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "27348979"
+  },
+  "item": [
+    {
+      "name": "Tenants",
+      "item": [
+        {
+          "name": "Get My Tenant",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tenants/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tenants",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Tenant",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Test Company2\",\r\n  \"ownerEmail\": \"owner@testcompany2.com\",\r\n  \"ownerName\": \"Test Owner2\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tenants",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tenants"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Updated Name\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/3149ee6e-e6ed-4a76-85c4-da74395ba386",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "3149ee6e-e6ed-4a76-85c4-da74395ba386"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/feadea96-0bd2-4b91-b88d-af4ce654a895",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "feadea96-0bd2-4b91-b88d-af4ce654a895"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/3149ee6e-e6ed-4a76-85c4-da74395ba386",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "3149ee6e-e6ed-4a76-85c4-da74395ba386"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User (Invite)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"newmember@acme.com\",\r\n  \"name\": \"New Member\",\r\n  \"role\": \"MEMBER\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API Keys",
+      "item": [
+        {
+          "name": "List API Keys",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api-keys",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api-keys"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rotate API Key",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api-keys/rotate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api-keys",
+                "rotate"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Audit",
+      "item": [
+        {
+          "name": "Get Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/audit?limit=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audit"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Audit Logs - Page 2",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/audit?limit=5&cursor=eyJpZCI6IjIzYTdkMzk3LWI0OWUtNDhhOS04NDNlLTc2MmNjYTAxMzk5MyJ9",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audit"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                },
+                {
+                  "key": "cursor",
+                  "value": "eyJpZCI6IjIzYTdkMzk3LWI0OWUtNDhhOS04NDNlLTc2MmNjYTAxMzk5MyJ9"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Audit Chain",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/audit/verify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audit",
+                "verify"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Internal-Key",
+                "value": "{{internalApiKey}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Internal-Key",
+                "value": "{{internalApiKey}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/metrics?tenantId=9cb50120-81a8-4322-b3d7-37cbaab1ef50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "metrics"
+              ],
+              "query": [
+                {
+                  "key": "tenantId",
+                  "value": "335c3f90-8929-4518-a532-ec99859d71b4",
+                  "disabled": true
+                },
+                {
+                  "key": "tenantId",
+                  "value": "9cb50120-81a8-4322-b3d7-37cbaab1ef50",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tests",
+      "item": [
+        {
+          "name": "Unauthorized Test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Isolation Test - Access Tenant 2 Data with Tenant 1 Key",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rate Limit Test",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant1ApiKey}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{tenant2ApiKey}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "tenant1ApiKey",
+      "value": ""
+    },
+    {
+      "key": "tenant2ApiKey",
+      "value": ""
+    },
+    {
+      "key": "internalApiKey",
+      "value": ""
+    },
+    {
+      "key": "tenant1Id",
+      "value": ""
+    },
+    {
+      "key": "tenant2Id",
+      "value": ""
+    }
+  ]
+}
