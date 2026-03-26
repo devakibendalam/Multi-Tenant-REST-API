@@ -90,21 +90,21 @@ The audit trail implements a blockchain-like hash chain:
 - If any entry was modified, deleted, or inserted, the chain breaks at that point
 - **Database-level append-only:** The audit_logs table should have a PostgreSQL trigger that prevents UPDATE and DELETE operations. This can be added via a raw SQL migration:
 ```sql
-CREATE OR REPLACE FUNCTION prevent_audit_modification()
-RETURNS TRIGGER AS $$
-BEGIN
-  RAISE EXCEPTION 'Audit logs are append-only. UPDATE and DELETE operations are not permitted.';
-  RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
+  CREATE OR REPLACE FUNCTION prevent_audit_modification()
+  RETURNS TRIGGER AS $$
+  BEGIN
+    RAISE EXCEPTION 'Audit logs are append-only. UPDATE and DELETE operations are not permitted.';
+    RETURN NULL;
+  END;
+  $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER audit_logs_no_update
-  BEFORE UPDATE ON audit_logs
-  FOR EACH ROW EXECUTE FUNCTION prevent_audit_modification();
+  CREATE TRIGGER audit_logs_no_update
+    BEFORE UPDATE ON audit_logs
+    FOR EACH ROW EXECUTE FUNCTION prevent_audit_modification();
 
-CREATE TRIGGER audit_logs_no_delete
-  BEFORE DELETE ON audit_logs
-  FOR EACH ROW EXECUTE FUNCTION prevent_audit_modification();
+  CREATE TRIGGER audit_logs_no_delete
+    BEFORE DELETE ON audit_logs
+    FOR EACH ROW EXECUTE FUNCTION prevent_audit_modification();
 ```
 ---
 ### 4️⃣ Queue-Based Email Engine
@@ -164,5 +164,3 @@ Hardest Problem: Implementing the sliding window rate limiter with correct behav
 Tenant Isolation at Query Level: Every database query passes through service functions that require tenantId as a mandatory parameter — it's never optional. The tenant ID is extracted from the API key during authentication (not from user input), and every Prisma where clause includes tenantId. This means even if middleware were bypassed, the queries themselves would still be scoped. For example, getUserById(tenantId, userId) uses findFirst({ where: { id: userId, tenantId } }) — a user from another tenant simply doesn't exist in the query's perspective.
 
 What I'd Do Differently: I would implement the sliding window rate limiter using a Redis Lua script for full atomicity. Currently, the ZREMRANGEBYSCORE, ZCARD, and ZADD operations are sent sequentially, creating a small race condition window in multi-instance deployments. A Lua script would execute all operations atomically on the Redis server.
-```
-```
